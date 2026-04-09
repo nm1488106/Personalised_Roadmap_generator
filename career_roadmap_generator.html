@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Roadmap Generator</title>
+
+  <!-- ============================================================
+       GOOGLE FONTS
+       We import two fonts:
+       - 'Sora'     : modern, friendly headings
+       - 'Inter'    : clean, readable body text
+  ============================================================ -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- ============================================================
+       ALL CSS STYLES
+       Organized into sections:
+       1. CSS Variables (colors, sizes)
+       2. Reset & Base
+       3. Layout / Page sections
+       4. Components (cards, buttons, badges, form elements)
+       5. Animations
+       6. Responsive (mobile)
+  ============================================================ -->
+  <style>
+
+    /* ----------------------------------------------------------
+       1. CSS VARIABLES
+       Define all colors and sizes in one place.
+       Change a value here → it updates everywhere automatically.
+    ---------------------------------------------------------- */
+    :root {
+      --blue-main:    #2563eb;   /* primary blue */
+      --blue-dark:    #1d4ed8;   /* darker blue for hover */
+      --blue-light:   #eff6ff;   /* very light blue for backgrounds */
+      --blue-mid:     #bfdbfe;   /* medium blue for borders/accents */
+      --accent:       #f59e0b;   /* amber accent color */
+      --accent-light: #fef3c7;   /* light amber background */
+      --green:        #16a34a;   /* success green */
+      --green-light:  #dcfce7;   /* light green background */
+      --text-dark:    #111827;   /* main text */
+      --text-mid:     #374151;   /* secondary text */
+      --text-muted:   #6b7280;   /* muted / placeholder text */
+      --bg-page:      #f0f4ff;   /* overall page background */
+      --bg-card:      #ffffff;   /* card background */
+      --border:       #e5e7eb;   /* default border color */
+      --radius-sm:    8px;
+      --radius-md:    12px;
+      --radius-lg:    18px;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md:    0 4px 16px rgba(37,99,235,0.10), 0 2px 6px rgba(0,0,0,0.06);
+      --shadow-lg:    0 8px 32px rgba(37,99,235,0.14), 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* ----------------------------------------------------------
+       2. RESET & BASE STYLES
+       Remove default browser margin/padding, set box-sizing.
+    ---------------------------------------------------------- */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth; /* smooth scroll when navigating */
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-page);
+      color: var(--text-dark);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ----------------------------------------------------------
+       3. PAGE SECTIONS
+       Each "page" is a <section> with class .page.
+       Only the active page is shown (display: block).
+       We switch pages using JavaScript.
+    ---------------------------------------------------------- */
+    .page {
+      display: none;          /* hidden by default */
+      min-height: 100vh;
+      animation: fadeIn 0.4s ease; /* fade in when shown */
+    }
+
+    .page.active {
+      display: block;         /* show when active */
+    }
+
+    /* ----------------------------------------------------------
+       4a. HERO / HOME PAGE STYLES
+    ---------------------------------------------------------- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative background circles on the hero */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      top: -150px;
+      right: -100px;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      bottom: -80px;
+      left: -60px;
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 18px;
+      border-radius: 99px;
+      border: 1px solid rgba(255,255,255,0.25);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.04em;
+    }
+
+    .hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem); /* responsive font size */
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      max-width: 700px;
+    }
+
+    .hero h1 span {
+      color: #fbbf24; /* highlight word in amber */
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.85);
+      max-width: 500px;
+      margin: 0 auto 2.5rem;
+    }
+
+    /* Feature pills shown below the description */
+    .hero-features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 2.5rem;
+    }
+
+    .feature-pill {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 13px;
+      padding: 7px 16px;
+      border-radius: 99px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* ----------------------------------------------------------
+       4b. BUTTON STYLES
+    ---------------------------------------------------------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 32px;
+      border-radius: var(--radius-md);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px); /* slight lift on hover */
+    }
+
+    .btn:active {
+      transform: translateY(0);    /* press down on click */
+    }
+
+    /* Primary button: white background, blue text */
+    .btn-primary {
+      background: #fff;
+      color: var(--blue-main);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .btn-primary:hover {
+      background: #f0f4ff;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.20);
+    }
+
+    /* Secondary button: blue background, white text */
+    .btn-secondary {
+      background: var(--blue-main);
+      color: #fff;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary:hover {
+      background: var(--blue-dark);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Outline button: transparent with border */
+    .btn-outline {
+      background: transparent;
+      color: var(--blue-main);
+      border: 2px solid var(--blue-main);
+    }
+
+    .btn-outline:hover {
+      background: var(--blue-light);
+    }
+
+    /* Danger/reset button */
+    .btn-danger {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .btn-danger:hover {
+      background: #fecaca;
+    }
+
+    /* ----------------------------------------------------------
+       4c. FORM PAGE LAYOUT
+    ---------------------------------------------------------- */
+    .form-page {
+      background: var(--bg-page);
+      padding: 2rem 1rem 4rem;
+    }
+
+    .form-container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Top bar showing step number and back button */
+    .form-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .back-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-mid);
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .back-btn:hover {
+      background: var(--blue-light);
+      color: var(--blue-main);
+    }
+
+    .step-indicator {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* ----------------------------------------------------------
+       4d. CARD COMPONENT
+       Used for form sections and result blocks.
+    ---------------------------------------------------------- */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md); /* lift on hover */
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Colored icon circle beside card title */
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--blue-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ----------------------------------------------------------
+       4e. FORM FIELD STYLES
+    ---------------------------------------------------------- */
+    .field-group {
+      margin-bottom: 1.1rem;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-mid);
+      margin-bottom: 6px;
+    }
+
+    /* Required asterisk */
+    .required {
+      color: #ef4444;
+      margin-left: 3px;
+    }
+
+    /* Text input and select (dropdown) */
+    .field-group input[type="text"],
+    .field-group select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--text-dark);
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    /* Blue border + glow when user clicks into a field */
+    .field-group input[type="text"]:focus,
+    .field-group select:focus {
+      border-color: var(--blue-main);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+
+    /* Red border for invalid fields */
+    .field-group input.error,
+    .field-group select.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.10);
+    }
+
+    /* Error message below a field */
+    .error-msg {
+      font-size: 12px;
+      color: #ef4444;
+      margin-top: 5px;
+      display: none; /* hidden until validation fails */
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    /* ----------------------------------------------------------
+       4f. CHECKBOX & RADIO BUTTON STYLES
+       Custom styled checkboxes and radio buttons.
+    ---------------------------------------------------------- */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .radio-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Each checkbox/radio option as a card */
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+      background: #fff;
+      font-size: 14px;
+      color: var(--text-mid);
+    }
+
+    .option-item:hover {
+      border-color: var(--blue-mid);
+      background: var(--blue-light);
+      color: var(--blue-main);
+    }
+
+    /* Highlighted when selected */
+    .option-item.selected {
+      border-color: var(--blue-main);
+      background: var(--blue-light);
+      color: var(--blue-main);
+      font-weight: 500;
+    }
+
+    /* Hide the actual checkbox/radio input (we use custom styling) */
+    .option-item input {
+      display: none;
+    }
+
+    /* Custom checkbox box */
+    .custom-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 2px solid var(--border);
+      background: #fff;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      font-size: 11px;
+    }
+
+    .option-item.selected .custom-check {
+      background: var(--blue-main);
+      border-color: var(--blue-main);
+      color: #fff;
+    }
+
+    /* Custom radio circle */
+    .custom-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: #fff;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .custom-radio-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.15s;
+    }
+
+    .option-item.selected .custom-radio {
+      border-color: var(--blue-main);
+    }
+
+    .option-item.selected .custom-radio-dot {
+      background: var(--blue-main);
+    }
+
+    /* ----------------------------------------------------------
+       4g. FORM SUBMIT AREA
+    ---------------------------------------------------------- */
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    /* ----------------------------------------------------------
+       4h. RESULT PAGE STYLES
+    ---------------------------------------------------------- */
+    .result-page {
+      background: var(--bg-page);
+      padding: 2rem 1rem 5rem;
+    }
+
+    .result-container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* Top banner showing student name + career */
+    .result-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.5rem;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-banner::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      right: -50px;
+      top: -60px;
+    }
+
+    .result-banner .greeting {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 4px;
+    }
+
+    .result-banner h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .result-banner .career-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 5px 16px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* ----------------------------------------------------------
+       4i. ROADMAP STEPS
+    ---------------------------------------------------------- */
+    .roadmap-steps {
+      list-style: none;
+      position: relative;
+    }
+
+    /* Vertical connecting line */
+    .roadmap-steps::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 32px;
+      bottom: 32px;
+      width: 2px;
+      background: var(--blue-mid);
+    }
+
+    .roadmap-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 1.1rem;
+      padding: 1rem 1.25rem;
+      background: #fff;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+
+    .roadmap-step:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Numbered circle for each step */
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--blue-main);
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ----------------------------------------------------------
+       4j. RESOURCE LINKS
+    ---------------------------------------------------------- */
+    .resource-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .resource-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      transition: box-shadow 0.15s;
+    }
+
+    .resource-item:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .resource-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .resource-info .resource-name {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .resource-info .resource-url {
+      font-size: 12px;
+      color: var(--blue-main);
+    }
+
+    /* ----------------------------------------------------------
+       4k. TIMELINE DISPLAY
+    ---------------------------------------------------------- */
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .timeline-card {
+      background: var(--blue-light);
+      border: 1px solid var(--blue-mid);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .timeline-card .tl-number {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--blue-main);
+    }
+
+    .timeline-card .tl-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ----------------------------------------------------------
+       4l. PROGRESS TRACKER (CHECKLIST)
+    ---------------------------------------------------------- */
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .progress-pct {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--blue-main);
+    }
+
+    /* The long horizontal progress bar */
+    .progress-bar-outer {
+      background: var(--blue-mid);
+      border-radius: 99px;
+      height: 10px;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: var(--blue-main);
+      height: 10px;
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Each checklist task row */
+    .checklist-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .checklist-row:last-child {
+      border-bottom: none;
+    }
+
+    .checklist-row:hover {
+      background: var(--blue-light);
+      border-radius: var(--radius-sm);
+      padding-left: 8px;
+    }
+
+    /* Custom checkbox for checklist */
+    .cl-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--blue-mid);
+      background: #fff;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      transition: all 0.15s;
+      margin-top: 1px;
+    }
+
+    .checklist-row.checked .cl-check {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .cl-text {
+      font-size: 14px;
+      color: var(--text-mid);
+      transition: all 0.2s;
+    }
+
+    /* Strike-through when task is completed */
+    .checklist-row.checked .cl-text {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    /* ----------------------------------------------------------
+       4m. RESULT ACTION BUTTONS
+    ---------------------------------------------------------- */
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 1.5rem;
+    }
+
+    /* ----------------------------------------------------------
+       5. ANIMATIONS
+    ---------------------------------------------------------- */
+
+    /* Page fade-in animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Staggered step animation for roadmap items */
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .roadmap-step {
+      animation: slideInLeft 0.3s ease both;
+    }
+
+    /* Delay each step slightly for a cascading look */
+    .roadmap-step:nth-child(1)  { animation-delay: 0.05s; }
+    .roadmap-step:nth-child(2)  { animation-delay: 0.10s; }
+    .roadmap-step:nth-child(3)  { animation-delay: 0.15s; }
+    .roadmap-step:nth-child(4)  { animation-delay: 0.20s; }
+    .roadmap-step:nth-child(5)  { animation-delay: 0.25s; }
+    .roadmap-step:nth-child(6)  { animation-delay: 0.30s; }
+    .roadmap-step:nth-child(7)  { animation-delay: 0.35s; }
+    .roadmap-step:nth-child(8)  { animation-delay: 0.40s; }
+
+    /* ----------------------------------------------------------
+       6. RESPONSIVE DESIGN (MOBILE)
+       Adjusts layout for small screens (phones).
+    ---------------------------------------------------------- */
+    @media (max-width: 600px) {
+      .card { padding: 1.25rem 1rem; }
+      .result-banner { padding: 1.5rem 1.25rem; }
+      .checkbox-grid { grid-template-columns: 1fr 1fr; }
+      .radio-grid { flex-direction: column; }
+      .result-actions { flex-direction: column; }
+      .timeline-grid { grid-template-columns: 1fr 1fr; }
+      .btn { padding: 12px 22px; font-size: 14px; }
+    }
+
+    /* ----------------------------------------------------------
+       SECTION HEADINGS (inside cards on result page)
+    ---------------------------------------------------------- */
+    .section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Colored dot beside section title */
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 18px;
+      background: var(--blue-main);
+      border-radius: 99px;
+      flex-shrink: 0;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       PAGE 1: HOME PAGE
+       The landing page. Shows title, description, and Start button.
+  ============================================================ -->
+  <section id="page-home" class="page active">
+    <div class="hero">
+      <!-- Small badge at the top -->
+      <div class="hero-badge">🎓 College Mini Project</div>
+
+      <!-- Main heading -->
+      <h1>Find Your Perfect <span>Career Path</span> in Minutes</h1>
+
+      <!-- Short description -->
+      <p>Answer a few simple questions and get a personalized, step-by-step career roadmap tailored just for you.</p>
+
+      <!-- Feature highlights shown as pills -->
+      <div class="hero-features">
+        <span class="feature-pill">🗺️ Step-by-step roadmap</span>
+        <span class="feature-pill">📚 Free & paid resources</span>
+        <span class="feature-pill">⏱️ Custom timeline</span>
+        <span class="feature-pill">✅ Progress tracker</span>
+      </div>
+
+      <!-- Start button → calls the goToForm() function in JS -->
+      <button class="btn btn-primary" onclick="goToForm()">
+        🚀 Get Started
+      </button>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 2: INPUT FORM PAGE
+       The main form where users enter their details.
+  ============================================================ -->
+  <section id="page-form" class="page">
+    <div class="form-page">
+      <div class="form-container">
+
+        <!-- Top bar: Back button + step indicator -->
+        <div class="form-topbar">
+          <button class="back-btn" onclick="goToHome()">← Back to Home</button>
+          <span class="step-indicator">Step 1 of 1 — Fill in your details</span>
+        </div>
+
+        <!-- ------------------------------------------------
+             CARD 1: Personal Info
+        ------------------------------------------------ -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">👤</div>
+            <div>
+              <div class="card-title">Personal Information</div>
+              <div class="card-subtitle">Tell us a bit about yourself</div>
+            </div>
+          </div>
+
+          <!-- Name field -->
+          <div class="field-group">
+            <label for="input-name">Your Name <span class="required">*</span></label>
+            <input type="text" id="input-name" placeholder="e.g. Rahul Sharma" />
+            <div class="error-msg" id="err-name">Please enter your name.</div>
+          </div>
+
+          <!-- Education level dropdown -->
+          <div class="field-group">
+            <label for="input-edu">Education Level <span class="required">*</span></label>
+            <select id="input-edu">
+              <option value="">-- Select your education level --</option>
+              <option value="School">School (10th or below)</option>
+              <option value="12th Pass">12th Pass</option>
+              <option value="Undergraduate">Undergraduate (Currently in college)</option>
+              <option value="Postgraduate">Postgraduate</option>
+            </select>
+            <div class="error-msg" id="err-edu">Please select your education level.</div>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------
+             CARD 2: Career Goal
+        ------------------------------------------------ -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">🎯</div>
+            <div>
+              <div class="card-title">Career Goal</div>
+              <div class="card-subtitle">Which field do you want to pursue?</div>
+            </div>
+          </div>
+
+          <!-- Career goal dropdown -->
+          <div class="field-group">
+            <label for="input-career">Career Goal <span class="required">*</span></label>
+            <select id="input-career">
+              <option value="">-- Select a career path --</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Web Development">Web Development</option>
+              <option value="App Development">App Development</option>
+              <option value="Artificial Intelligence">Artificial Intelligence</option>
+              <option value="Cybersecurity">Cybersecurity</option>
+              <option value="UI/UX Design">UI/UX Design</option>
+              <option value="Digital Marketing">Digital Marketing</option>
+              <option value="Business / Startup">Business / Startup</option>
+              <option value="Government Job">Government Job</option>
+              <option value="Other">Other</option>
+            </select>
+            <div class="error-msg" id="err-career">Please select a career goal.</div>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------
+             CARD 3: Current Skills (Checkboxes)
+             Users can select multiple skills.
+        ------------------------------------------------ -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">🛠️</div>
+            <div>
+              <div class="card-title">Current Skills</div>
+              <div class="card-subtitle">Select all that apply to you</div>
+            </div>
+          </div>
+
+          <div class="checkbox-grid" id="skills-group">
+            <!-- Each option is a label acting as a clickable card -->
+            <!-- JS will handle toggling the .selected class -->
+            <label class="option-item" onclick="toggleCheckbox(this, 'skill')">
+              <input type="checkbox" value="None" />
+              <span class="custom-check">✓</span>
+              <span>None yet</span>
+            </label>
+            <label class="option-item" onclick="toggleCheckbox(this, 'skill')">
+              <input type="checkbox" value="Basic Programming" />
+              <span class="custom-check">✓</span>
+              <span>Basic Programming</span>
+            </label>
+            <label class="option-item" onclick="toggleCheckbox(this, 'skill')">
+              <input type="checkbox" value="Communication Skills" />
+              <span class="custom-check">✓</span>
+              <span>Communication Skills</span>
+            </label>
+            <label class="option-item" onclick="toggleCheckbox(this, 'skill')">
+              <input type="checkbox" value="Problem Solving" />
+              <span class="custom-check">✓</span>
+              <span>Problem Solving</span>
+            </label>
+            <label class="option-item" onclick="toggleCheckbox(this, 'skill')">
+              <input type="checkbox" value="Mathematics" />
+              <span class="custom-check">✓</span>
+              <span>Mathematics</span>
+            </label>
+            <label class="option-item" onclick="toggleCheckbox(this, 'skill')">
+              <input type="checkbox" value="Design Skills" />
+              <span class="custom-check">✓</span>
+              <span>Design Skills</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------
+             CARD 4: Experience Level (Radio Buttons)
+             Only one option can be selected.
+        ------------------------------------------------ -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">📊</div>
+            <div>
+              <div class="card-title">Experience Level</div>
+              <div class="card-subtitle">How much do you already know?</div>
+            </div>
+          </div>
+
+          <div class="radio-grid" id="exp-group">
+            <label class="option-item" onclick="toggleRadio(this, 'exp-group')">
+              <input type="radio" name="experience" value="Beginner" />
+              <span class="custom-radio"><span class="custom-radio-dot"></span></span>
+              <span>🌱 Beginner</span>
+            </label>
+            <label class="option-item" onclick="toggleRadio(this, 'exp-group')">
+              <input type="radio" name="experience" value="Intermediate" />
+              <span class="custom-radio"><span class="custom-radio-dot"></span></span>
+              <span>⚡ Intermediate</span>
+            </label>
+            <label class="option-item" onclick="toggleRadio(this, 'exp-group')">
+              <input type="radio" name="experience" value="Advanced" />
+              <span class="custom-radio"><span class="custom-radio-dot"></span></span>
+              <span>🔥 Advanced</span>
+            </label>
+          </div>
+          <div class="error-msg" id="err-exp">Please select your experience level.</div>
+        </div>
+
+        <!-- ------------------------------------------------
+             CARD 5: Time & Budget
+        ------------------------------------------------ -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">⏰</div>
+            <div>
+              <div class="card-title">Time & Budget</div>
+              <div class="card-subtitle">How much time and money can you invest?</div>
+            </div>
+          </div>
+
+          <!-- Time available dropdown -->
+          <div class="field-group">
+            <label for="input-time">Time Available per Day <span class="required">*</span></label>
+            <select id="input-time">
+              <option value="">-- Select daily study time --</option>
+              <option value="1-2">1–2 hours/day</option>
+              <option value="3-4">3–4 hours/day</option>
+              <option value="5+">5+ hours/day</option>
+            </select>
+            <div class="error-msg" id="err-time">Please select your available time.</div>
+          </div>
+
+          <!-- Budget radio buttons -->
+          <div class="field-group">
+            <label>Budget Preference <span class="required">*</span></label>
+            <div class="radio-grid" id="budget-group">
+              <label class="option-item" onclick="toggleRadio(this, 'budget-group')">
+                <input type="radio" name="budget" value="Free" />
+                <span class="custom-radio"><span class="custom-radio-dot"></span></span>
+                <span>💸 Free resources only</span>
+              </label>
+              <label class="option-item" onclick="toggleRadio(this, 'budget-group')">
+                <input type="radio" name="budget" value="Paid" />
+                <span class="custom-radio"><span class="custom-radio-dot"></span></span>
+                <span>💳 Paid courses allowed</span>
+              </label>
+            </div>
+            <div class="error-msg" id="err-budget">Please select your budget preference.</div>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------
+             CARD 6: Learning Style (Checkboxes)
+        ------------------------------------------------ -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">📖</div>
+            <div>
+              <div class="card-title">Learning Style</div>
+              <div class="card-subtitle">How do you learn best? (Select all that apply)</div>
+            </div>
+          </div>
+
+          <div class="checkbox-grid" id="style-group">
+            <label class="option-item" onclick="toggleCheckbox(this, 'style')">
+              <input type="checkbox" value="Videos" />
+              <span class="custom-check">✓</span>
+              <span>🎥 Videos</span>
+            </label>
+            <label class="option-item" onclick="toggleCheckbox(this, 'style')">
+              <input type="checkbox" value="Reading" />
+              <span class="custom-check">✓</span>
+              <span>📄 Reading / Docs</span>
+            </label>
+            <label class="option-item" onclick="toggleCheckbox(this, 'style')">
+              <input type="checkbox" value="Practical Projects" />
+              <span class="custom-check">✓</span>
+              <span>🔨 Practical Projects</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Generate Roadmap button -->
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="generateRoadmap()">
+            🗺️ Generate My Roadmap
+          </button>
+        </div>
+
+      </div><!-- /form-container -->
+    </div><!-- /form-page -->
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 3: RESULT PAGE
+       Shows the generated roadmap, resources, timeline, and checklist.
+       This page is filled dynamically by JavaScript.
+  ============================================================ -->
+  <section id="page-result" class="page">
+    <div class="result-page">
+      <div class="result-container">
+
+        <!-- Dynamic content is inserted here by JS -->
+        <div id="result-content"></div>
+
+        <!-- Action buttons at the bottom -->
+        <div class="result-actions">
+          <!-- Go back to edit the form -->
+          <button class="btn btn-outline" onclick="goToForm()">
+            ← Edit Answers
+          </button>
+          <!-- Reset everything and start over -->
+          <button class="btn btn-danger" onclick="resetAll()">
+            🔄 Start Over
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       ALL JAVASCRIPT LOGIC
+       Organized into sections:
+       A. Navigation functions (switch between pages)
+       B. Form interaction helpers (toggle checkbox/radio)
+       C. Form validation
+       D. Roadmap data (career path knowledge base)
+       E. Timeline calculator
+       F. Resource recommender
+       G. Roadmap generator (main function)
+       H. Progress tracker (checklist)
+       I. Reset function
+  ============================================================ -->
+  <script>
+
+    /* ===========================================================
+       A. NAVIGATION FUNCTIONS
+       These functions show/hide the three pages.
+    =========================================================== */
+
+    /* Show the Home page */
+    function goToHome() {
+      showPage('page-home');
+    }
+
+    /* Show the Form page */
+    function goToForm() {
+      showPage('page-form');
+    }
+
+    /* Show the Result page */
+    function goToResult() {
+      showPage('page-result');
+    }
+
+    /* Helper: hide all pages, then show the target page */
+    function showPage(pageId) {
+      /* Remove .active from all pages */
+      document.querySelectorAll('.page').forEach(function(p) {
+        p.classList.remove('active');
+      });
+      /* Add .active to the requested page */
+      document.getElementById(pageId).classList.add('active');
+      /* Scroll to top of page */
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+
+    /* ===========================================================
+       B. FORM INTERACTION HELPERS
+       Handle toggling checkbox and radio button option cards.
+    =========================================================== */
+
+    /* Toggle a CHECKBOX option card on/off */
+    function toggleCheckbox(labelEl, groupName) {
+      /* Wait a tick so the checkbox state updates first */
+      setTimeout(function() {
+        var checkbox = labelEl.querySelector('input[type="checkbox"]');
+        /* Toggle the .selected class based on checkbox state */
+        if (checkbox.checked) {
+          labelEl.classList.add('selected');
+        } else {
+          labelEl.classList.remove('selected');
+        }
+      }, 0);
+    }
+
+    /* Toggle a RADIO button option card.
+       Only one option in the group can be selected at a time. */
+    function toggleRadio(labelEl, groupId) {
+      /* Find the parent group container */
+      var group = document.getElementById(groupId);
+      if (!group) {
+        /* Budget and exp groups don't use IDs on their containers,
+           so search upward in the DOM instead */
+        group = labelEl.closest('.radio-grid');
+      }
+      /* Remove .selected from all options in this group */
+      group.querySelectorAll('.option-item').forEach(function(item) {
+        item.classList.remove('selected');
+      });
+      /* Add .selected to the clicked option */
+      labelEl.classList.add('selected');
+    }
+
+
+    /* ===========================================================
+       C. FORM VALIDATION
+       Check that all required fields are filled before generating.
+    =========================================================== */
+
+    /* Read the checked value from a radio group by name */
+    function getRadioValue(radioName) {
+      var checked = document.querySelector('input[name="' + radioName + '"]:checked');
+      return checked ? checked.value : '';
+    }
+
+    /* Read all checked checkbox values from a grid container */
+    function getCheckboxValues(gridId) {
+      var values = [];
+      document.querySelectorAll('#' + gridId + ' input[type="checkbox"]:checked').forEach(function(cb) {
+        values.push(cb.value);
+      });
+      return values;
+    }
+
+    /* Show or hide an error message */
+    function setError(fieldId, errId, show) {
+      var field = document.getElementById(fieldId);
+      var errEl = document.getElementById(errId);
+      if (!field || !errEl) return;
+      if (show) {
+        field.classList.add('error');
+        errEl.classList.add('show');
+      } else {
+        field.classList.remove('error');
+        errEl.classList.remove('show');
+      }
+    }
+
+    /* Validate the whole form. Returns true if valid, false if not. */
+    function validateForm() {
+      var valid = true;
+
+      /* Check name */
+      var name = document.getElementById('input-name').value.trim();
+      if (!name) {
+        setError('input-name', 'err-name', true);
+        valid = false;
+      } else {
+        setError('input-name', 'err-name', false);
+      }
+
+      /* Check education */
+      var edu = document.getElementById('input-edu').value;
+      if (!edu) {
+        setError('input-edu', 'err-edu', true);
+        valid = false;
+      } else {
+        setError('input-edu', 'err-edu', false);
+      }
+
+      /* Check career goal */
+      var career = document.getElementById('input-career').value;
+      if (!career) {
+        setError('input-career', 'err-career', true);
+        valid = false;
+      } else {
+        setError('input-career', 'err-career', false);
+      }
+
+      /* Check experience level */
+      var exp = getRadioValue('experience');
+      var errExpEl = document.getElementById('err-exp');
+      if (!exp) {
+        errExpEl.classList.add('show');
+        valid = false;
+      } else {
+        errExpEl.classList.remove('show');
+      }
+
+      /* Check time */
+      var time = document.getElementById('input-time').value;
+      if (!time) {
+        setError('input-time', 'err-time', true);
+        valid = false;
+      } else {
+        setError('input-time', 'err-time', false);
+      }
+
+      /* Check budget */
+      var budget = getRadioValue('budget');
+      var errBudgetEl = document.getElementById('err-budget');
+      if (!budget) {
+        errBudgetEl.classList.add('show');
+        valid = false;
+      } else {
+        errBudgetEl.classList.remove('show');
+      }
+
+      /* If validation failed, alert the user */
+      if (!valid) {
+        alert('⚠️ Please fill in all required fields before generating your roadmap!');
+      }
+
+      return valid;
+    }
+
+
+    /* ===========================================================
+       D. ROADMAP DATA (KNOWLEDGE BASE)
+       This is a JavaScript OBJECT that stores all career roadmap
+       information. It acts like a simple database.
+
+       Structure:
+         careerData[careerName] = {
+           steps: [
+             { title, desc }   ← roadmap steps for beginners
+           ],
+           advancedSteps: [...]  ← extra steps for advanced users
+           resources: [
+             { icon, name, url, type }
+           ],
+           checklist: [...]    ← progress tracker tasks
+         }
+    =========================================================== */
+    var careerData = {
+
+      /* ---- DATA SCIENCE ---- */
+      "Data Science": {
+        steps: [
+          { title: "Learn Python Programming",        desc: "Start with Python basics: variables, loops, functions, and file I/O. Python is the #1 language for Data Science." },
+          { title: "Learn Statistics & Mathematics",  desc: "Understand mean, median, variance, probability, and basic linear algebra. These form the backbone of ML." },
+          { title: "Master Data Manipulation",         desc: "Learn Pandas and NumPy libraries to load, clean, and process datasets." },
+          { title: "Data Visualization",               desc: "Use Matplotlib and Seaborn to create charts and graphs. Learn to tell stories with data." },
+          { title: "Machine Learning Basics",          desc: "Study supervised & unsupervised learning algorithms: linear regression, decision trees, k-means." },
+          { title: "Work on Real Projects",            desc: "Build 2–3 projects: e.g. house price predictor, spam classifier, or sales dashboard using Kaggle datasets." }
+        ],
+        advancedSteps: [
+          { title: "Deep Learning & Neural Networks",  desc: "Learn TensorFlow or PyTorch. Build image classifiers and text models." },
+          { title: "Big Data & Cloud Tools",           desc: "Explore Spark, SQL databases, and cloud platforms like AWS or Google Cloud." }
+        ],
+        resources: [
+          { icon: "▶️", name: "Krish Naik – Data Science Full Course", url: "https://www.youtube.com/@krishnaik06",    type: "YouTube" },
+          { icon: "📘", name: "Kaggle Learn – Free ML Courses",         url: "https://www.kaggle.com/learn",            type: "Website" },
+          { icon: "🌐", name: "W3Schools Python Tutorial",              url: "https://www.w3schools.com/python",        type: "Website" },
+          { icon: "💻", name: "Kaggle – Practice with real datasets",   url: "https://www.kaggle.com",                  type: "Practice" }
+        ],
+        checklist: [
+          "Install Python and VS Code",
+          "Complete Python basics tutorial",
+          "Practice with NumPy & Pandas",
+          "Create your first data visualization",
+          "Complete one ML mini-project",
+          "Upload project to GitHub"
+        ]
+      },
+
+      /* ---- WEB DEVELOPMENT ---- */
+      "Web Development": {
+        steps: [
+          { title: "Learn HTML",               desc: "Understand page structure: headings, paragraphs, links, images, forms, and tables." },
+          { title: "Learn CSS",                desc: "Style your pages with colors, fonts, flexbox, grid, and responsive design (media queries)." },
+          { title: "Learn JavaScript",         desc: "Add interactivity: DOM manipulation, event listeners, fetch API, and ES6+ features." },
+          { title: "Version Control with Git", desc: "Learn Git & GitHub: commits, branches, push/pull. Essential for every developer." },
+          { title: "Learn a Frontend Framework", desc: "Pick React.js or Vue.js to build dynamic web apps with components and state." },
+          { title: "Backend Basics",           desc: "Learn Node.js + Express or Python Flask to handle data and build APIs." },
+          { title: "Build & Deploy Projects",  desc: "Create a portfolio site, a to-do app, and a full-stack project. Deploy to Netlify or Vercel." }
+        ],
+        advancedSteps: [
+          { title: "Databases: SQL & MongoDB",  desc: "Learn to store and retrieve data. Understand relational vs non-relational databases." },
+          { title: "DevOps & Deployment",       desc: "Learn Docker basics, CI/CD pipelines, and deploying to cloud (AWS, Railway, Render)." }
+        ],
+        resources: [
+          { icon: "▶️", name: "The Odin Project – Full Web Dev Curriculum", url: "https://www.theodinproject.com",  type: "Website" },
+          { icon: "▶️", name: "Traversy Media – YouTube Web Dev Tutorials",  url: "https://www.youtube.com/@TraversyMedia", type: "YouTube" },
+          { icon: "📘", name: "MDN Web Docs – HTML, CSS, JS Reference",       url: "https://developer.mozilla.org",   type: "Docs" },
+          { icon: "💻", name: "Frontend Mentor – Practice real projects",      url: "https://www.frontendmentor.io",   type: "Practice" }
+        ],
+        checklist: [
+          "Build your first HTML page",
+          "Style it with CSS (flexbox layout)",
+          "Add JavaScript interactivity",
+          "Create a GitHub account & push your code",
+          "Build a personal portfolio website",
+          "Learn one frontend framework (React or Vue)",
+          "Deploy a project online"
+        ]
+      },
+
+      /* ---- APP DEVELOPMENT ---- */
+      "App Development": {
+        steps: [
+          { title: "Choose Your Platform",      desc: "Decide: Android (Java/Kotlin), iOS (Swift), or Cross-platform (Flutter/React Native)." },
+          { title: "Learn Programming Language", desc: "For Flutter: learn Dart. For Android: learn Kotlin. For cross-platform: learn JavaScript/TypeScript." },
+          { title: "Understand UI/UX Basics",   desc: "Learn Material Design guidelines. Study how to design intuitive mobile interfaces." },
+          { title: "Build Your First App",      desc: "Create a simple To-Do app or calculator. Learn Activities, Layouts, and Navigation." },
+          { title: "Learn State Management",    desc: "Manage app state with Provider (Flutter), ViewModel (Android), or Redux (React Native)." },
+          { title: "Integrate APIs & Databases", desc: "Connect to REST APIs (like weather data). Use SQLite or Firebase for local/cloud storage." },
+          { title: "Publish Your App",          desc: "Upload to Google Play Store or App Store. Learn app signing, metadata, and screenshots." }
+        ],
+        advancedSteps: [
+          { title: "Push Notifications & Auth", desc: "Implement Firebase Authentication and push notifications in your app." },
+          { title: "App Monetization",          desc: "Explore AdMob (ads), in-app purchases, or premium subscriptions." }
+        ],
+        resources: [
+          { icon: "▶️", name: "Flutter – Official YouTube Channel",     url: "https://www.youtube.com/@flutterdev",        type: "YouTube" },
+          { icon: "📘", name: "Flutter.dev – Official Docs & Tutorials", url: "https://flutter.dev/docs",                   type: "Docs" },
+          { icon: "▶️", name: "Mitch Koko – Flutter UI Tutorials",       url: "https://www.youtube.com/@mitchkoko",         type: "YouTube" },
+          { icon: "💻", name: "DartPad – Practice Flutter/Dart online",  url: "https://dartpad.dev",                        type: "Practice" }
+        ],
+        checklist: [
+          "Set up Flutter or Android Studio",
+          "Learn Dart/Kotlin basics",
+          "Build a Hello World app",
+          "Create a To-Do List app",
+          "Add navigation between screens",
+          "Connect to a public API",
+          "Publish to Google Play Store"
+        ]
+      },
+
+      /* ---- ARTIFICIAL INTELLIGENCE ---- */
+      "Artificial Intelligence": {
+        steps: [
+          { title: "Python for AI",              desc: "Learn Python well — especially OOP, NumPy, and Pandas, which are essential for AI work." },
+          { title: "Mathematics for AI",         desc: "Study Linear Algebra, Calculus (derivatives), Probability, and Statistics." },
+          { title: "Machine Learning Foundations", desc: "Understand key ML algorithms: regression, classification, clustering, and evaluation metrics." },
+          { title: "Deep Learning",              desc: "Learn Neural Networks, CNNs for images, and RNNs for sequences using TensorFlow or PyTorch." },
+          { title: "Natural Language Processing", desc: "Study text processing, tokenization, transformers, and models like BERT." },
+          { title: "AI Projects & Research",     desc: "Build projects: chatbot, image classifier, or text summarizer. Read research papers." }
+        ],
+        advancedSteps: [
+          { title: "Generative AI & LLMs",       desc: "Explore GPT, Stable Diffusion, LangChain. Learn prompt engineering and fine-tuning." },
+          { title: "AI Deployment",              desc: "Deploy AI models as APIs using FastAPI. Host on Hugging Face Spaces or AWS SageMaker." }
+        ],
+        resources: [
+          { icon: "▶️", name: "Andrew Ng – Machine Learning Specialization", url: "https://www.coursera.org/specializations/machine-learning-introduction", type: "Course" },
+          { icon: "▶️", name: "3Blue1Brown – Neural Networks Visually", url: "https://www.youtube.com/@3blue1brown",      type: "YouTube" },
+          { icon: "📘", name: "fast.ai – Practical Deep Learning Course",    url: "https://www.fast.ai",                    type: "Website" },
+          { icon: "💻", name: "Google Colab – Free GPU for AI projects",     url: "https://colab.research.google.com",      type: "Practice" }
+        ],
+        checklist: [
+          "Learn Python & NumPy",
+          "Study linear algebra basics",
+          "Build first ML model (linear regression)",
+          "Implement a neural network from scratch",
+          "Complete one computer vision project",
+          "Publish a project on GitHub or Hugging Face"
+        ]
+      },
+
+      /* ---- CYBERSECURITY ---- */
+      "Cybersecurity": {
+        steps: [
+          { title: "Computer Networking Basics",  desc: "Learn how the internet works: TCP/IP, DNS, HTTP, firewalls, and network protocols." },
+          { title: "Learn Linux & Command Line",  desc: "Become comfortable with Linux terminal commands. Most security tools run on Linux (Kali)." },
+          { title: "Programming for Security",    desc: "Learn Python scripting for automation. Understand basic scripting in Bash." },
+          { title: "Ethical Hacking Basics",      desc: "Study attack types: SQL injection, XSS, buffer overflow. Use tools like Nmap and Metasploit." },
+          { title: "Cryptography",                desc: "Understand encryption, hashing (SHA, MD5), SSL/TLS, and digital signatures." },
+          { title: "Prepare for Certifications",  desc: "Study for CompTIA Security+ or CEH. These are industry-recognized entry-level certifications." }
+        ],
+        advancedSteps: [
+          { title: "Penetration Testing",         desc: "Practice on TryHackMe and HackTheBox. Learn web app and network pentesting methodology." },
+          { title: "Security Operations (SOC)",   desc: "Learn SIEM tools, log analysis, incident response, and threat hunting." }
+        ],
+        resources: [
+          { icon: "▶️", name: "NetworkChuck – Cybersecurity on YouTube",  url: "https://www.youtube.com/@NetworkChuck", type: "YouTube" },
+          { icon: "💻", name: "TryHackMe – Learn hacking hands-on",       url: "https://tryhackme.com",                 type: "Practice" },
+          { icon: "💻", name: "HackTheBox – CTF Challenges",              url: "https://www.hackthebox.com",            type: "Practice" },
+          { icon: "📘", name: "OWASP – Web Security Guides",              url: "https://owasp.org",                     type: "Docs" }
+        ],
+        checklist: [
+          "Install Kali Linux (VM)",
+          "Learn basic networking (OSI model)",
+          "Complete TryHackMe pre-security path",
+          "Write a Python port scanner script",
+          "Practice SQL injection on test sites",
+          "Complete one CompTIA Security+ practice test"
+        ]
+      },
+
+      /* ---- UI/UX DESIGN ---- */
+      "UI/UX Design": {
+        steps: [
+          { title: "Design Principles",           desc: "Learn color theory, typography, spacing, visual hierarchy, and the basics of Gestalt psychology." },
+          { title: "Learn Figma",                 desc: "Master Figma: frames, components, auto-layout, prototyping, and design systems." },
+          { title: "User Research Methods",       desc: "Learn user interviews, surveys, persona creation, and journey mapping." },
+          { title: "Wireframing & Prototyping",   desc: "Go from rough wireframes → high-fidelity mockups → interactive prototypes." },
+          { title: "Usability Testing",           desc: "Test designs with real users. Learn to identify and fix usability problems." },
+          { title: "Build Your Portfolio",        desc: "Create 3–5 case studies showing your process (research → design → test → iterate)." }
+        ],
+        advancedSteps: [
+          { title: "Design Systems",              desc: "Build a reusable component library. Study popular systems like Material Design and Ant Design." },
+          { title: "Motion Design",               desc: "Learn micro-animations and transitions using Figma Smart Animate or After Effects." }
+        ],
+        resources: [
+          { icon: "▶️", name: "DesignCourse – UI/UX on YouTube",         url: "https://www.youtube.com/@DesignCourse", type: "YouTube" },
+          { icon: "📘", name: "Figma – Free Design Tool",                url: "https://www.figma.com",                 type: "Tool" },
+          { icon: "📘", name: "Refactoring UI – Design Tips for Devs",   url: "https://www.refactoringui.com",         type: "Book" },
+          { icon: "💻", name: "Dribbble – Inspiration & portfolio",      url: "https://dribbble.com",                  type: "Inspiration" }
+        ],
+        checklist: [
+          "Learn color theory & typography",
+          "Set up a Figma account",
+          "Redesign an existing app screen",
+          "Create a full mobile app prototype in Figma",
+          "Conduct a usability test with 3 people",
+          "Publish your first case study on Behance or portfolio site"
+        ]
+      },
+
+      /* ---- DIGITAL MARKETING ---- */
+      "Digital Marketing": {
+        steps: [
+          { title: "Marketing Fundamentals",      desc: "Understand the 4 Ps of marketing, target audiences, branding, and the customer journey." },
+          { title: "Search Engine Optimization",  desc: "Learn on-page SEO, keyword research, backlinks, and tools like Google Search Console." },
+          { title: "Social Media Marketing",      desc: "Create content strategies for Instagram, LinkedIn, and YouTube. Learn scheduling tools." },
+          { title: "Email Marketing",             desc: "Build email lists, write effective campaigns, and use tools like Mailchimp." },
+          { title: "Google Ads & Analytics",      desc: "Learn PPC advertising, ad copy writing, A/B testing, and Google Analytics basics." },
+          { title: "Content Marketing",           desc: "Write blogs, make videos, or create infographics to attract and engage audiences." }
+        ],
+        advancedSteps: [
+          { title: "Performance Marketing",       desc: "Master ROI optimization, conversion rate optimization (CRO), and attribution models." },
+          { title: "Marketing Automation",        desc: "Use tools like HubSpot or Zapier to automate lead nurturing and campaigns." }
+        ],
+        resources: [
+          { icon: "▶️", name: "Google Digital Garage – Free Courses",    url: "https://learndigital.withgoogle.com",    type: "Course" },
+          { icon: "▶️", name: "Neil Patel – Digital Marketing YouTube",  url: "https://www.youtube.com/@NeilPatel",     type: "YouTube" },
+          { icon: "📘", name: "HubSpot Academy – Free Certifications",   url: "https://academy.hubspot.com",            type: "Course" },
+          { icon: "💻", name: "Google Analytics Demo Account",           url: "https://analytics.google.com/analytics/web/demoAccount", type: "Practice" }
+        ],
+        checklist: [
+          "Complete Google Digital Garage course",
+          "Set up a Google Search Console account",
+          "Create and schedule 5 social media posts",
+          "Write your first SEO-optimized blog post",
+          "Run a small Google Ads campaign",
+          "Earn a HubSpot Marketing certification"
+        ]
+      },
+
+      /* ---- BUSINESS / STARTUP ---- */
+      "Business / Startup": {
+        steps: [
+          { title: "Ideation & Problem Finding",  desc: "Identify real problems worth solving. Use frameworks like Design Thinking and SWOT analysis." },
+          { title: "Market Research",             desc: "Validate your idea by talking to potential customers. Survey at least 20 people." },
+          { title: "Build a Business Plan",       desc: "Define your product, target market, revenue model, and go-to-market strategy." },
+          { title: "Create an MVP",               desc: "Build the simplest version of your product that solves the core problem. Keep it lean." },
+          { title: "Marketing & Growth",          desc: "Learn customer acquisition, social media, and word-of-mouth growth strategies." },
+          { title: "Funding & Scaling",           desc: "Explore bootstrapping, angel investors, and startup competitions. Pitch your idea clearly." }
+        ],
+        advancedSteps: [
+          { title: "Team Building & Leadership",  desc: "Learn how to find co-founders, hire your first employees, and build company culture." },
+          { title: "Finance & Legal Basics",      desc: "Understand P&L statements, cash flow, startup equity, and company registration." }
+        ],
+        resources: [
+          { icon: "▶️", name: "Y Combinator – Startup School (Free)",   url: "https://www.startupschool.org",          type: "Course" },
+          { icon: "📘", name: "The Lean Startup – Eric Ries (Book)",    url: "https://theleanstartup.com",             type: "Book" },
+          { icon: "▶️", name: "Shark Tank India – Watch for inspiration", url: "https://www.youtube.com/results?search_query=shark+tank+india", type: "YouTube" },
+          { icon: "💻", name: "Canva – Free Business Plan Templates",   url: "https://www.canva.com",                  type: "Tool" }
+        ],
+        checklist: [
+          "Write down your startup idea in one sentence",
+          "Interview 10 potential customers",
+          "Create a simple business plan document",
+          "Build a landing page for your MVP",
+          "Launch and get your first 10 users",
+          "Apply to a startup competition or incubator"
+        ]
+      },
+
+      /* ---- GOVERNMENT JOB ---- */
+      "Government Job": {
+        steps: [
+          { title: "Choose Your Exam & Stream",    desc: "Decide: UPSC (IAS/IPS), SSC (CGL/CHSL), Banking (IBPS/SBI), State PSC, or Railways." },
+          { title: "Check Eligibility",            desc: "Verify age limit, educational qualification, and number of attempts for your chosen exam." },
+          { title: "Get the Official Syllabus",    desc: "Download the latest syllabus from the official exam website. Understand the exam pattern." },
+          { title: "Create a Study Plan",          desc: "Divide the syllabus into weekly topics. Allocate time for revision and mock tests." },
+          { title: "Study Core Subjects",          desc: "General Awareness, Reasoning, Quantitative Aptitude, and English are common to most exams." },
+          { title: "Practice Mock Tests Daily",    desc: "Attempt full-length mock tests. Analyze your weak areas and improve them." }
+        ],
+        advancedSteps: [
+          { title: "Current Affairs",              desc: "Read newspapers daily (The Hindu / Indian Express). Follow monthly current affairs magazines." },
+          { title: "Interview Preparation",        desc: "Practice personality tests, group discussions, and panel interviews (for UPSC/PSC stage 3)." }
+        ],
+        resources: [
+          { icon: "▶️", name: "Unacademy – Free Govt Exam Prep",        url: "https://unacademy.com",                  type: "YouTube" },
+          { icon: "▶️", name: "Adda247 – Banking & SSC Prep",           url: "https://www.adda247.com",                type: "Website" },
+          { icon: "📘", name: "NCERT Books – Foundation for UPSC",      url: "https://ncert.nic.in/textbook.php",       type: "Books" },
+          { icon: "💻", name: "Testbook – Free Mock Tests Online",       url: "https://testbook.com",                   type: "Practice" }
+        ],
+        checklist: [
+          "Choose your target exam",
+          "Download official syllabus and pattern",
+          "Buy or download NCERT books",
+          "Create a 6-month study timetable",
+          "Attempt your first full mock test",
+          "Subscribe to a current affairs newsletter"
+        ]
+      },
+
+      /* ---- OTHER (Generic) ---- */
+      "Other": {
+        steps: [
+          { title: "Define Your Goal Clearly",     desc: "Research the field you're interested in. Talk to people already working in it." },
+          { title: "Identify Key Skills Needed",   desc: "Search for job descriptions in your target career to find what skills are required." },
+          { title: "Start Learning Foundations",   desc: "Find beginner-friendly books, YouTube courses, or free online platforms for your field." },
+          { title: "Build Small Projects",         desc: "Apply what you learn by working on real mini-projects. Don't just read — build!" },
+          { title: "Network & Find Mentors",       desc: "Join LinkedIn, Discord communities, or college clubs related to your field." },
+          { title: "Document Your Progress",       desc: "Keep a learning journal or portfolio. Share your work on LinkedIn or GitHub." }
+        ],
+        advancedSteps: [
+          { title: "Specialize & Go Deep",         desc: "Once you have basics, pick one area to specialize in. Depth beats breadth in careers." },
+          { title: "Seek Internships or Freelance", desc: "Get real-world experience. Even unpaid internships provide valuable exposure." }
+        ],
+        resources: [
+          { icon: "▶️", name: "YouTube – Search your field + 'for beginners'", url: "https://www.youtube.com",         type: "YouTube" },
+          { icon: "📘", name: "Coursera – Free Audit for most courses",         url: "https://www.coursera.org",        type: "Course" },
+          { icon: "📘", name: "edX – University-level free courses",            url: "https://www.edx.org",             type: "Course" },
+          { icon: "💻", name: "LinkedIn Learning – Professional courses",       url: "https://www.linkedin.com/learning", type: "Course" }
+        ],
+        checklist: [
+          "Write your career goal in one sentence",
+          "Find 3 people already in your target career",
+          "Complete your first beginner course",
+          "Build one small project",
+          "Update your LinkedIn profile",
+          "Connect with 5 professionals in your field"
+        ]
+      }
+
+    }; /* end careerData */
+
+
+    /* ===========================================================
+       E. TIMELINE CALCULATOR
+       Estimate weeks needed based on hours per day.
+       More hours → faster completion.
+    =========================================================== */
+    function calculateTimeline(timeOption, numSteps) {
+      /* Hours per week for each option */
+      var hoursPerWeek = { "1-2": 10, "3-4": 24, "5+": 40 };
+      var hpw = hoursPerWeek[timeOption] || 14;
+
+      /* Roughly 8 hours to complete each step */
+      var totalHours   = numSteps * 8;
+      var totalWeeks   = Math.ceil(totalHours / hpw);
+      var totalMonths  = (totalWeeks / 4.3).toFixed(1);
+
+      return { weeks: totalWeeks, months: totalMonths, hpw: hpw };
+    }
+
+
+    /* ===========================================================
+       F. EXPERIENCE LEVEL ADJUSTER
+       Beginners get all steps.
+       Intermediate users skip the very first "basics" step.
+       Advanced users only see advanced steps + a few core ones.
+    =========================================================== */
+    function getStepsForLevel(career, level) {
+      var data = careerData[career];
+      if (!data) return [];
+
+      var allSteps = data.steps.slice(); /* copy of base steps */
+
+      if (level === "Beginner") {
+        /* Beginners get all steps as-is */
+        return allSteps;
+      } else if (level === "Intermediate") {
+        /* Skip the very first step (basics already known) */
+        return allSteps.slice(1);
+      } else if (level === "Advanced") {
+        /* Show only the last 2 base steps + advanced steps */
+        var coreSteps = allSteps.slice(-2);
+        var advSteps  = data.advancedSteps || [];
+        return coreSteps.concat(advSteps);
+      }
+
+      return allSteps;
+    }
+
+
+    /* ===========================================================
+       G. GENERATE ROADMAP (MAIN FUNCTION)
+       Called when user clicks "Generate My Roadmap".
+       1. Validates the form
+       2. Reads all user input
+       3. Looks up roadmap data
+       4. Builds the result HTML
+       5. Shows the result page
+    =========================================================== */
+    function generateRoadmap() {
+
+      /* Step 1: Validate form — stop if invalid */
+      if (!validateForm()) return;
+
+      /* Step 2: Read all user input values */
+      var name       = document.getElementById('input-name').value.trim();
+      var education  = document.getElementById('input-edu').value;
+      var career     = document.getElementById('input-career').value;
+      var experience = getRadioValue('experience');
+      var timeOption = document.getElementById('input-time').value;
+      var budget     = getRadioValue('budget');
+      var skills     = getCheckboxValues('skills-group');
+      var styles     = getCheckboxValues('style-group');
+
+      /* Step 3: Look up career data */
+      var data = careerData[career];
+      if (!data) {
+        /* Fallback to "Other" if career not found */
+        data   = careerData["Other"];
+        career = "Other";
+      }
+
+      /* Get appropriate steps for experience level */
+      var steps = getStepsForLevel(career, experience);
+
+      /* Calculate timeline */
+      var timeline = calculateTimeline(timeOption, steps.length);
+
+      /* Filter resources based on budget preference:
+         If "Free only", exclude paid course links (show all for simplicity,
+         but note which are free vs paid) */
+      var resources = data.resources;
+
+      /* Get checklist tasks */
+      var checklist = data.checklist || [];
+
+      /* Step 4: Build result HTML */
+      var html = '';
+
+      /* --- Banner --- */
+      html += '<div class="result-banner">';
+      html += '  <div class="greeting">Your personalized roadmap is ready, ' + name + '!</div>';
+      html += '  <h2>🗺️ Your path to becoming a ' + career + ' professional</h2>';
+      html += '  <span class="career-badge">📚 ' + education + ' &nbsp;·&nbsp; ⚡ ' + experience + ' &nbsp;·&nbsp; 💰 ' + budget + '</span>';
+      html += '</div>';
+
+      /* --- Roadmap Steps --- */
+      html += '<div class="card">';
+      html += '  <div class="section-title">Step-by-Step Roadmap</div>';
+      html += '  <ol class="roadmap-steps">';
+      steps.forEach(function(step, index) {
+        html += '<li class="roadmap-step">';
+        html += '  <div class="step-num">' + (index + 1) + '</div>';
+        html += '  <div class="step-content">';
+        html += '    <div class="step-title">' + step.title + '</div>';
+        html += '    <div class="step-desc">'  + step.desc  + '</div>';
+        html += '  </div>';
+        html += '</li>';
+      });
+      html += '  </ol>';
+      html += '</div>';
+
+      /* --- Resources --- */
+      html += '<div class="card">';
+      html += '  <div class="section-title">Recommended Resources</div>';
+      html += '  <ul class="resource-list">';
+      resources.forEach(function(res) {
+        html += '<li class="resource-item">';
+        html += '  <span class="resource-icon">' + res.icon + '</span>';
+        html += '  <div class="resource-info">';
+        html += '    <div class="resource-name">' + res.name + '</div>';
+        html += '    <div class="resource-url"><a href="' + res.url + '" target="_blank">' + res.url + '</a></div>';
+        html += '  </div>';
+        html += '  <span style="font-size:12px;color:var(--text-muted);margin-left:auto;white-space:nowrap;">' + res.type + '</span>';
+        html += '</li>';
+      });
+      html += '  </ul>';
+      html += '</div>';
+
+      /* --- Timeline --- */
+      html += '<div class="card">';
+      html += '  <div class="section-title">Estimated Timeline</div>';
+      html += '  <div class="timeline-grid">';
+      html += '    <div class="timeline-card"><div class="tl-number">' + steps.length + '</div><div class="tl-label">Total Steps</div></div>';
+      html += '    <div class="timeline-card"><div class="tl-number">' + timeline.hpw + '</div><div class="tl-label">Hours per Week</div></div>';
+      html += '    <div class="timeline-card"><div class="tl-number">' + timeline.weeks + '</div><div class="tl-label">Est. Weeks</div></div>';
+      html += '    <div class="timeline-card"><div class="tl-number">' + timeline.months + '</div><div class="tl-label">Est. Months</div></div>';
+      html += '  </div>';
+
+      /* Show a note based on budget */
+      var budgetNote = (budget === "Free") ?
+        "💡 <strong>Budget tip:</strong> All recommended resources above have free access options. Great choice!" :
+        "💡 <strong>Budget tip:</strong> Paid courses on Udemy, Coursera, or local bootcamps can accelerate your learning.";
+      html += '<p style="font-size:13px;color:var(--text-muted);margin-top:1rem;">' + budgetNote + '</p>';
+      html += '</div>';
+
+      /* --- Progress Tracker / Checklist --- */
+      html += '<div class="card">';
+      html += '  <div class="progress-header">';
+      html += '    <div class="section-title" style="margin:0">Progress Tracker</div>';
+      html += '    <div class="progress-pct" id="progress-pct">0%</div>';
+      html += '  </div>';
+      html += '  <div class="progress-bar-outer"><div class="progress-bar-fill" id="progress-bar"></div></div>';
+      html += '  <div id="checklist-container">';
+      checklist.forEach(function(task, i) {
+        html += '<div class="checklist-row" id="cl-row-' + i + '" onclick="toggleTask(' + i + ', ' + checklist.length + ')">';
+        html += '  <div class="cl-check" id="cl-check-' + i + '"></div>';
+        html += '  <div class="cl-text">' + task + '</div>';
+        html += '</div>';
+      });
+      html += '  </div>';
+      html += '</div>';
+
+      /* Step 5: Insert into page and show it */
+      document.getElementById('result-content').innerHTML = html;
+      goToResult();
+    }
+
+
+    /* ===========================================================
+       H. PROGRESS TRACKER FUNCTIONS
+       Toggle checklist tasks on/off and update the progress bar.
+    =========================================================== */
+
+    /* Track how many tasks are completed */
+    var completedCount = 0;
+
+    /* Toggle a checklist task when user clicks it */
+    function toggleTask(index, total) {
+      var row   = document.getElementById('cl-row-'   + index);
+      var check = document.getElementById('cl-check-' + index);
+
+      if (row.classList.contains('checked')) {
+        /* Un-check: mark as incomplete */
+        row.classList.remove('checked');
+        check.textContent = '';
+        completedCount--;
+      } else {
+        /* Check: mark as complete */
+        row.classList.add('checked');
+        check.textContent = '✓';
+        completedCount++;
+      }
+
+      /* Update progress bar and percentage */
+      updateProgressBar(completedCount, total);
+    }
+
+    /* Update the progress bar width and percentage text */
+    function updateProgressBar(completed, total) {
+      var pct    = Math.round((completed / total) * 100);
+      var barEl  = document.getElementById('progress-bar');
+      var pctEl  = document.getElementById('progress-pct');
+
+      if (barEl) barEl.style.width = pct + '%';
+      if (pctEl) pctEl.textContent = pct + '%';
+
+      /* Celebrate when all done! */
+      if (pct === 100) {
+        alert('🎉 Amazing! You have completed all tasks in your roadmap! Keep pushing forward!');
+      }
+    }
+
+
+    /* ===========================================================
+       I. RESET FUNCTION
+       Clear all form fields and go back to the Home page.
+    =========================================================== */
+    function resetAll() {
+      /* Confirm before resetting */
+      var confirm = window.confirm('Are you sure you want to start over? All your current progress will be lost.');
+      if (!confirm) return;
+
+      /* Clear text inputs */
+      document.getElementById('input-name').value = '';
+
+      /* Reset all dropdowns to first option */
+      document.getElementById('input-edu').value    = '';
+      document.getElementById('input-career').value = '';
+      document.getElementById('input-time').value   = '';
+
+      /* Uncheck all checkboxes and remove .selected class */
+      document.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+        cb.checked = false;
+      });
+      document.querySelectorAll('.option-item').forEach(function(item) {
+        item.classList.remove('selected');
+      });
+
+      /* Uncheck all radio buttons */
+      document.querySelectorAll('input[type="radio"]').forEach(function(rb) {
+        rb.checked = false;
+      });
+
+      /* Hide all error messages */
+      document.querySelectorAll('.error-msg').forEach(function(e) {
+        e.classList.remove('show');
+      });
+      document.querySelectorAll('.error').forEach(function(e) {
+        e.classList.remove('error');
+      });
+
+      /* Reset progress counter */
+      completedCount = 0;
+
+      /* Go back to home page */
+      goToHome();
+    }
+
+  </script>
+
+</body>
+</html>
